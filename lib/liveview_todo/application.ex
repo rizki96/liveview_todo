@@ -9,6 +9,7 @@ defmodule LiveviewTodo.Application do
     children = [
       # Start the Telemetry supervisor
       LiveviewTodoWeb.Telemetry,
+      LiveviewTodo.KvStore,
       # Start the PubSub system
       {Phoenix.PubSub, name: LiveviewTodo.PubSub},
       # Start the Endpoint (http/https)

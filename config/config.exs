@@ -18,6 +18,9 @@ config :liveview_todo, LiveviewTodoWeb.Endpoint,
   pubsub_server: LiveviewTodo.PubSub,
   live_view: [signing_salt: "kwJe7Vv/"]
 
+config :liveview_todo, LiveviewTodo.KvStore,
+  data_dir: "priv/data/kv_store.db"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
