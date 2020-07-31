@@ -1,4 +1,4 @@
-defmodule PlvReactWeb.Todos.AddTodoFormComponent do
+defmodule LiveviewTodoWeb.Todos.AddTodoFormComponent do
     use Phoenix.LiveComponent
     use Phoenix.HTML
 
@@ -7,7 +7,7 @@ defmodule PlvReactWeb.Todos.AddTodoFormComponent do
     def render(assigns) do
         ~L"""
         <div class="add_todo_form">
-            <%= f = form_for :todo, "#" %>
+            <%= f = form_for :todo, "#", [phx_submit: :add_todo] %>
                 <%= text_input f, :text %>
                 <div>
                     <%= submit "Add Todo", phx_disable_with: "Adding..." %>
