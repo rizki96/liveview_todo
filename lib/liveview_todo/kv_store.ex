@@ -25,9 +25,9 @@ defmodule LiveviewTodo.KvStore do
   end
 
   def new_data(record, data) do
-    meta = CubDB.get_meta(record)
+    meta = get_meta(record)
     CubDB.put(__MODULE__, {record, meta.last_registered_id + 1}, data)
-    CubDB.update_meta(record, meta.last_registered_id + 1)
+    update_meta(record, %MetaRecord{last_registered_id: meta.last_registered_id + 1})
   end
 
   def update_data(record, id, data) do
@@ -44,12 +44,24 @@ defmodule LiveviewTodo.KvStore do
     CubDB.get(__MODULE__, {record, id})
   end
 
-  defp get_meta(record) do
+  def get_meta(record) do
     CubDB.get(__MODULE__, {:meta_record, record}, MetaRecord.new)
   end
 
-  defp update_meta(record, last_registered_id) do
+  def update_meta(record, last_registered_id) do
     CubDB.put(__MODULE__, {:meta_record, record}, %MetaRecord{last_registered_id: last_registered_id})
     {record, last_registered_id}
+  end
+
+  def struct_from_map(a_map, as: a_struct) do
+    # Find the keys within the map
+    keys = Map.keys(a_struct) |> Enum.filter(fn x -> x != :__struct__ end)  # Process map, checking for both string / atom keys
+    processed_map =
+    for key <- keys, into: %{} do
+      value = Map.get(a_map, key) || Map.get(a_map, to_string(key))
+      {key, value}
+    end
+    a_struct = Map.merge(a_struct, processed_map)
+    a_struct
   end
 end

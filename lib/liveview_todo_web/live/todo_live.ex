@@ -1,13 +1,14 @@
 defmodule LiveviewTodoWeb.TodoLive do
     use LiveviewTodoWeb, :live_view
-  
+
+    alias LiveviewTodo.Tasks
     alias LiveviewTodoWeb.Todos.AddTodoFormComponent
     require Logger
 
     @impl true
     def mount(_params, _session, socket) do
-        
-        {:ok, assign(socket, todos: %{})}
+        todos = Tasks.list_todos()
+        {:ok, assign(socket, todos: todos)}
     end
 
     @impl true

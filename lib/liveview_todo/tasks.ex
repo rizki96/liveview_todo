@@ -10,8 +10,9 @@ defmodule LiveviewTodo.Tasks do
         completed: false
     ]
 
-    def new do
-      %__MODULE__{}
+    def new(text) do
+      meta = KvStore.get_meta(:todos)
+      %__MODULE__{id: meta.last_registered_id, text: text, completed: false}
     end
   end
 
@@ -27,9 +28,9 @@ defmodule LiveviewTodo.Tasks do
 
   """
   def list_todos do
-    CubDB.select(__MODULE__,
+    CubDB.select(LiveviewTodo.KvStore,
       min_key_inclusive: false,
-      max_key: {:todos, _}},
+      max_key: {:todos, nil}
     )
   end
 
@@ -44,7 +45,7 @@ defmodule LiveviewTodo.Tasks do
       %Todo{}
 
   """
-  def get_todo!(_id), do: raise "TODO"
+  def get_todo!(id), do: KvStore.get_data(:todos, id)
 
   @doc """
   Creates a todo.
@@ -58,8 +59,8 @@ defmodule LiveviewTodo.Tasks do
       {:error, ...}
 
   """
-  def create_todo(_attrs \\ %{}) do
-    raise "TODO"
+  def create_todo(attrs \\ %{}) do
+    KvStore.new_data(:todos, Todo.new(attrs[:text]))
   end
 
   @doc """
@@ -74,8 +75,9 @@ defmodule LiveviewTodo.Tasks do
       {:error, ...}
 
   """
-  def update_todo(%Todo{} = _todo, _attrs) do
-    raise "TODO"
+  def update_todo(%Todo{} = todo, attrs) do
+    updated_todo = KvStore.struct_from_map(attrs, as: todo)
+    KvStore.update_data(:todos, todo.id, updated_todo)
   end
 
   @doc """
@@ -90,8 +92,8 @@ defmodule LiveviewTodo.Tasks do
       {:error, ...}
 
   """
-  def delete_todo(%_Todo{} = _todo) do
-    raise "TODO"
+  def delete_todo(%_Todo{} = todo) do
+    KvStore.delete_data(:todos, todo.id)
   end
 
   @doc """
