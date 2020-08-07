@@ -27,7 +27,10 @@ defmodule LiveviewTodo.Tasks do
 
   """
   def list_todos do
-    raise "TODO"
+    CubDB.select(__MODULE__,
+      min_key_inclusive: false,
+      max_key: {:todos, _}},
+    )
   end
 
   @doc """
