@@ -32,6 +32,7 @@ defmodule LiveviewTodo.Tasks do
   """
   def list_todos do
     CubDB.select(LiveviewTodo.KvStore,
+      #reverse: true,
       min_key_inclusive: false,
       min_key: {:todos, 0},
       max_key: {:todos, nil}
