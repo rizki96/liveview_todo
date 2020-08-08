@@ -1,5 +1,6 @@
 defmodule LiveviewTodo.KvStore do
-    
+  @moduledoc false
+
   require Logger
 
   defmodule MetaRecord do
@@ -57,7 +58,8 @@ defmodule LiveviewTodo.KvStore do
 
   def struct_from_map(a_map, as: a_struct) do
     # Find the keys within the map
-    keys = Map.keys(a_struct) |> Enum.filter(fn x -> x != :__struct__ end)  # Process map, checking for both string / atom keys
+    keys = Map.keys(a_struct) |> Enum.filter(fn x -> x != :__struct__ end)
+    # Process map, checking for both string / atom keys
     processed_map =
     for key <- keys, into: %{} do
       value = Map.get(a_map, key) || Map.get(a_map, to_string(key))
