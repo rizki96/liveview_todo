@@ -27,17 +27,19 @@ defmodule LiveviewTodo.KvStore do
   def new_data(record, data) do
     meta = get_meta(record)
     CubDB.put(__MODULE__, {record, meta.last_registered_id + 1}, data)
-    update_meta(record, %MetaRecord{last_registered_id: meta.last_registered_id + 1})
+    {record, id} = update_meta(record, meta.last_registered_id + 1)
+    get_data(record, id)
   end
 
   def update_data(record, id, data) do
     CubDB.put(__MODULE__, {record, id}, data)
-    {record, id}
+    get_data(record, id)
   end
 
   def delete_data(record, id) do
+    data = get_data(record, id)
     CubDB.delete(__MODULE__, {record, id})
-    {record, id}
+    data
   end
 
   def get_data(record, id) do

@@ -1,3 +1,4 @@
 <div>
+    <%= live_component @socket, TodoListComponent, id: :my_todo_list, todos: @todos %>
     <%= live_component @socket, AddTodoFormComponent %>
 </div>

@@ -3,7 +3,12 @@ defmodule LiveviewTodo.Tasks do
   The Tasks context.
   """
 
+  alias LiveviewTodo.KvStore
+
+  #require Logger
+
   defmodule Todo do
+    @derive {Jason.Encoder, only: [:id, :text, :completed]}
     defstruct [
         id: nil,
         text: nil,
@@ -12,11 +17,9 @@ defmodule LiveviewTodo.Tasks do
 
     def new(text) do
       meta = KvStore.get_meta(:todos)
-      %__MODULE__{id: meta.last_registered_id, text: text, completed: false}
+      %__MODULE__{id: meta.last_registered_id + 1, text: text, completed: false}
     end
   end
-
-  alias LiveviewTodo.KvStore
 
   @doc """
   Returns the list of todos.
@@ -30,6 +33,7 @@ defmodule LiveviewTodo.Tasks do
   def list_todos do
     CubDB.select(LiveviewTodo.KvStore,
       min_key_inclusive: false,
+      min_key: {:todos, 0},
       max_key: {:todos, nil}
     )
   end
@@ -60,7 +64,8 @@ defmodule LiveviewTodo.Tasks do
 
   """
   def create_todo(attrs \\ %{}) do
-    KvStore.new_data(:todos, Todo.new(attrs[:text]))
+    new_todo = change_todo(%Todo{}, attrs)
+    KvStore.new_data(:todos, Todo.new(new_todo.text))
   end
 
   @doc """
@@ -76,7 +81,7 @@ defmodule LiveviewTodo.Tasks do
 
   """
   def update_todo(%Todo{} = todo, attrs) do
-    updated_todo = KvStore.struct_from_map(attrs, as: todo)
+    updated_todo = change_todo(todo, attrs)
     KvStore.update_data(:todos, todo.id, updated_todo)
   end
 
@@ -105,7 +110,7 @@ defmodule LiveviewTodo.Tasks do
       %Todo{...}
 
   """
-  def change_todo(%Todo{} = _todo, _attrs \\ %{}) do
-    raise "TODO"
+  def change_todo(%Todo{} = todo, attrs \\ %{}) do
+    KvStore.struct_from_map(attrs, as: todo)
   end
 end
