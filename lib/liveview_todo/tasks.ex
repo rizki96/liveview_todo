@@ -38,7 +38,7 @@ defmodule LiveviewTodo.Tasks do
     KvStore.update_data(:todos, todo.id, updated_todo)
   end
 
-  def delete_todo(%_Todo{} = todo) do
+  def delete_todo(todo) do
     KvStore.delete_data(:todos, todo.id)
   end
 
