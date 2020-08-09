@@ -15,6 +15,7 @@ defmodule LiveviewTodo.KvStore do
 
   def child_spec(_) do
     Supervisor.Spec.worker(CubDB, [Application.get_env(:liveview_todo, __MODULE__)[:data_dir], [name: __MODULE__]])
+    # NOTE: only for reference, below is how we trigger elixir actor as a supervisor not a worker
     #%{id: __MODULE__, start: {CubDB, :start_link, [Application.get_env(:liveview_todo, __MODULE__)[:data_dir], [name: __MODULE__]]}}
   end
 
