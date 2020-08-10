@@ -15,8 +15,6 @@ defmodule LiveviewTodoWeb.Todos.TodoListComponent do
   end
 
   def mount(socket) do
-    Logger.log(:debug, "#{inspect socket.assigns}")
-
     {:ok, socket}
   end
 
