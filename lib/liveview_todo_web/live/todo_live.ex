@@ -42,7 +42,7 @@ defmodule LiveviewTodoWeb.TodoLive do
         {:noreply, socket}
     end
 
-    # version 1
+    # without JS Interop
     #@impl true
     #def handle_params(%{"id" => id, "action" => "delete"} = _params, _from, socket) do
     #    Logger.log(:debug, "#{inspect id}")
@@ -60,7 +60,7 @@ defmodule LiveviewTodoWeb.TodoLive do
     #    {:noreply, socket}
     #end
 
-    # version 2
+    # with JS Interop
     @impl true
     def handle_params(%{"id" => id, "action" => "delete"} = _params, _from, socket) do
         Logger.log(:debug, "#{inspect id}")
