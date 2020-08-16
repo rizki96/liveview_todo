@@ -76,4 +76,9 @@ defmodule LiveviewTodoWeb.TodoLive do
         {:noreply, socket}
     end
 
+    @impl true
+    def handle_params(_params, _uri, socket) do
+        # all unhandled params goes here
+        {:noreply, socket}
+    end
 end
