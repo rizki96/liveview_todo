@@ -12,9 +12,6 @@ const TodoListHook = {
     },
     updated() {
         console.log("updated");
-    },
-    destroyed() {
-        console.log("updated");
     }
 }
 
