@@ -22,7 +22,6 @@ defmodule LiveviewTodoWeb.Todos.TodoListItemComponent do
     """
   end
 
-  @impl true
   def mount(socket) do
     {:ok, socket}
   end
