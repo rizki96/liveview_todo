@@ -6,7 +6,7 @@ defmodule LiveviewTodoWeb.Todos.TodoListComponent do
 
   def render(assigns) do
     ~L"""
-    <ul phx-update="append">
+    <ul phx-update="append" phx-hook="TodoListHook">
         <%= for todo <- @todos do %>
             <%= live_component @socket, TodoListItemComponent, id: todo.id, todo: todo %>
         <% end %>

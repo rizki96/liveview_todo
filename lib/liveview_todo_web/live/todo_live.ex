@@ -41,4 +41,39 @@ defmodule LiveviewTodoWeb.TodoLive do
 
         {:noreply, socket}
     end
+
+    # version 1
+    #@impl true
+    #def handle_params(%{"id" => id} = _params, _from, socket) do
+    #    Logger.log(:debug, "#{inspect id}")
+    #    del_todo = Tasks.get_todo!(String.to_integer(id))
+    #    socket =
+    #    if del_todo do
+    #        Tasks.delete_todo(del_todo)
+    #        {:ok, todos} = Tasks.list_todos()
+    #        todos = Enum.map(todos, fn {_, todo} -> todo end)
+    #        assign(socket, todos: todos)
+    #    else
+    #        socket
+    #    end
+    #
+    #    {:noreply, socket}
+    #end
+
+    # version 2
+    @impl true
+    def handle_params(%{"id" => id} = _params, _from, socket) do
+        Logger.log(:debug, "#{inspect id}")
+        del_todo = Tasks.get_todo!(String.to_integer(id))
+        socket =
+        if del_todo do
+            Tasks.delete_todo(del_todo)
+            push_event(socket, "delete_todo_event", %{todo: del_todo})
+        else
+            socket
+        end
+
+        {:noreply, socket}
+    end
+
 end

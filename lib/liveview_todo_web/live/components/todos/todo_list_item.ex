@@ -2,6 +2,9 @@ defmodule LiveviewTodoWeb.Todos.TodoListItemComponent do
   use Phoenix.LiveComponent
   use Phoenix.HTML
 
+  alias LiveviewTodoWeb.Router.Helpers, as: Routes
+  alias LiveviewTodoWeb.TodoLive
+
   require Logger
 
   def render(assigns) do
@@ -11,10 +14,15 @@ defmodule LiveviewTodoWeb.Todos.TodoListItemComponent do
             <%= checkbox(:todo, :completed, phx_click: "update_todo:#{@todo.id}", phx_value: Jason.encode!(@todo), id: "chkbox-#{@todo.id}", checked: @todo.completed) %>
             <%= @todo.text %>
         </label>
+        <%= if false do %>
+        <%= live_redirect("X", to: Routes.live_path(@socket, TodoLive, [id: @todo.id]), replace: false) %>
+        <% end %>
+        <%= live_patch("X", to: Routes.live_path(@socket, TodoLive, [id: @todo.id]), replace: false) %>
     </li>
     """
   end
 
+  @impl true
   def mount(socket) do
     {:ok, socket}
   end
