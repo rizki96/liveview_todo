@@ -44,7 +44,7 @@ defmodule LiveviewTodoWeb.TodoLive do
 
     # without JS Interop
     #@impl true
-    #def handle_params(%{"id" => id, "action" => "delete"} = _params, _from, socket) do
+    #def handle_params(%{"id" => id, "action" => "delete"} = _params, _uri, socket) do
     #    Logger.log(:debug, "#{inspect id}")
     #    del_todo = Tasks.get_todo!(String.to_integer(id))
     #    socket =
@@ -62,7 +62,7 @@ defmodule LiveviewTodoWeb.TodoLive do
 
     # with JS Interop
     @impl true
-    def handle_params(%{"id" => id, "action" => "delete"} = _params, _from, socket) do
+    def handle_params(%{"id" => id, "action" => "delete"} = _params, _uri, socket) do
         Logger.log(:debug, "#{inspect id}")
         del_todo = Tasks.get_todo!(String.to_integer(id))
         socket =
