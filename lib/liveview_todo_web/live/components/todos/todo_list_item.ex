@@ -15,8 +15,10 @@ defmodule LiveviewTodoWeb.Todos.TodoListItemComponent do
             <%= @todo.text %>
         </label>
         <%= if false do %>
+        <!-- without JS Interop -->
         <%= live_redirect("X", to: Routes.live_path(@socket, TodoLive, [id: @todo.id, action: :delete]), replace: false) %>
         <% end %>
+        <!-- with JS Interop -->
         <%= live_patch("X", to: Routes.live_path(@socket, TodoLive, [id: @todo.id, action: :delete]), replace: false) %>
     </li>
     """
