@@ -7,11 +7,14 @@ defmodule LiveviewTodoWeb.TodoLive do
 
     require Logger
 
+    @topic "live_todo"
+
     @impl true
     def mount(_params, _session, socket) do
         {:ok, todos} = Tasks.list_todos()
         todos = Enum.map(todos, fn {_, todo} -> todo end)
         socket = assign(socket, todos: todos)
+        Phoenix.PubSub.subscribe(LiveviewTodo.PubSub, @topic, link: true)
 
         {:ok, assign(socket, temporary_assigns: [todos: []])}
     end
@@ -20,6 +23,7 @@ defmodule LiveviewTodoWeb.TodoLive do
     def handle_event("add_todo", %{"todo" => todo} = _params, socket) do
         Logger.log(:debug, "#{inspect todo}")
         new_todo = Tasks.create_todo(todo)
+        Phoenix.PubSub.broadcast(LiveviewTodo.PubSub, @topic, {"new_todo_event", new_todo})
 
         {:noreply, assign(socket, :todos, [new_todo])}
     end
@@ -34,6 +38,8 @@ defmodule LiveviewTodoWeb.TodoLive do
                      (if Map.has_key?(params, "value") and params["value"] == "true",
                          do: %{completed: true, id: old_todo.id, text: old_todo.text},
                          else: %{completed: false, id: old_todo.id, text: old_todo.text}))
+            
+            Phoenix.PubSub.broadcast(LiveviewTodo.PubSub, @topic, {"update_todo_event", updated_todo})
             assign(socket, :todos, [updated_todo])
         else
             socket
@@ -68,6 +74,7 @@ defmodule LiveviewTodoWeb.TodoLive do
         socket =
         if del_todo do
             Tasks.delete_todo(del_todo)
+            Phoenix.PubSub.broadcast(LiveviewTodo.PubSub, @topic, {"delete_todo_event", del_todo})
             push_event(socket, "delete_todo_event", %{todo: del_todo})
         else
             socket
@@ -79,6 +86,24 @@ defmodule LiveviewTodoWeb.TodoLive do
     @impl true
     def handle_params(_params, _uri, socket) do
         # all unhandled params goes here
+        {:noreply, socket}
+    end
+
+    @impl true
+    def handle_info({"delete_todo_event", todo} = _info, socket) do
+
+        {:noreply, push_event(socket, "delete_todo_event", %{todo: todo})}
+    end
+
+    @impl true
+    def handle_info({_event, todo} = _info, socket) do
+
+        {:noreply, assign(socket, :todos, [todo])}
+    end
+
+    @impl true
+    def handle_info(_info, socket) do
+        # all unhandled info goes here
         {:noreply, socket}
     end
 end
