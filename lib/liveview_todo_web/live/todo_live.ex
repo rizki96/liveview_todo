@@ -48,25 +48,6 @@ defmodule LiveviewTodoWeb.TodoLive do
         {:noreply, socket}
     end
 
-    # without JS Interop
-    #@impl true
-    #def handle_params(%{"id" => id, "action" => "delete"} = _params, _uri, socket) do
-    #    Logger.log(:debug, "#{inspect id}")
-    #    del_todo = Tasks.get_todo!(String.to_integer(id))
-    #    socket =
-    #    if del_todo do
-    #        Tasks.delete_todo(del_todo)
-    #        {:ok, todos} = Tasks.list_todos()
-    #        todos = Enum.map(todos, fn {_, todo} -> todo end)
-    #        assign(socket, todos: todos)
-    #    else
-    #        socket
-    #    end
-    #
-    #    {:noreply, socket}
-    #end
-
-    # with JS Interop
     @impl true
     def handle_params(%{"id" => id, "action" => "delete"} = _params, _uri, socket) do
         Logger.log(:debug, "#{inspect id}")

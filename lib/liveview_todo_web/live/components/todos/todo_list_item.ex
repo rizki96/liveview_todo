@@ -14,11 +14,6 @@ defmodule LiveviewTodoWeb.Todos.TodoListItemComponent do
             <%= checkbox(:todo, :completed, phx_click: "update_todo:#{@todo.id}", phx_value: Jason.encode!(@todo), id: "chkbox-#{@todo.id}", checked: @todo.completed) %>
             <%= @todo.text %>
         </label>
-        <%= if false do %>
-        <!-- without JS Interop -->
-        <%= live_redirect("X", to: Routes.live_path(@socket, TodoLive, [id: @todo.id, action: :delete]), replace: false) %>
-        <% end %>
-        <!-- with JS Interop -->
         <%= live_patch("X", to: Routes.live_path(@socket, TodoLive, [id: @todo.id, action: :delete]), replace: false) %>
     </li>
     """
